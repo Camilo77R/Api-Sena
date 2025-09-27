@@ -1,27 +1,26 @@
-// Importamos los módulos separados siguiendo el principio de responsabilidad única
+// Imports de los módulos
 import { login, logout, getUser, getFicha, setSelectedFicha, getSelectedFicha } from './storage.js';
 import { fetchAprendices, buscarAprendices, getEstadisticasFicha } from './fetchData.js';
 import { renderUser, renderFichas, renderTable, renderSearchResults, mostrarNotificacion } from './ui.js';
 
 /**
- * APLICACIÓN PRINCIPAL
- * Esta clase se encarga de coordinar todos los módulos y manejar la lógica principal
- * Sigue el principio de responsabilidad única: solo se encarga de la coordinación
+ * Clase principal de la aplicación
+ * Coordina todo: login, datos, interfaz
  */
 class SenaApp {
   constructor() {
-    console.log('🚀 Iniciando aplicación SENA...');
+    console.log('Iniciando app...');
     this.aprendices = [];
     this.aprendicesFiltrados = [];
     this.elementos = this.obtenerElementosDOM();
-    console.log('🎯 Elementos DOM obtenidos:', this.elementos);
+    console.log('Elementos DOM:', this.elementos);
     this.configurarEventos();
-    console.log('⚡ Eventos configurados');
+    console.log('Eventos configurados');
     this.verificarSesionInicial();
-    console.log('🔍 Verificación de sesión completada');
+    console.log('Sesión verificada');
   }
 
-  // Obtiene todas las referencias de elementos DOM necesarias
+  // Obtener referencias de elementos HTML
   obtenerElementosDOM() {
     return {
       loginSection: document.getElementById("login-section"),
@@ -35,7 +34,7 @@ class SenaApp {
     };
   }
 
-  // Crea dinámicamente un campo de búsqueda
+  // Crear campo de búsqueda dinámicamente
   crearCampoBusqueda() {
     const main = document.querySelector('main');
     if (!main) return null;
@@ -74,48 +73,48 @@ class SenaApp {
     return document.getElementById('search-input');
   }
 
-  // Configura todos los event listeners de la aplicación
+  // Configurar todos los listeners
   configurarEventos() {
-    console.log('🔧 Configurando eventos...');
+    console.log('Configurando eventos...');
     
     if (this.elementos.loginForm) {
       this.elementos.loginForm.addEventListener("submit", (e) => this.manejarLogin(e));
-      console.log('✅ Evento de login configurado');
+      console.log('Login event OK');
     } else {
-      console.error('❌ No se encontró el formulario de login');
+      console.error('Form no encontrado');
     }
     
     if (this.elementos.logoutBtn) {
       this.elementos.logoutBtn.addEventListener("click", () => this.manejarLogout());
-      console.log('✅ Evento de logout configurado');
+      console.log('Logout event OK');
     }
     
     if (this.elementos.fichaSelect) {
       this.elementos.fichaSelect.addEventListener("change", () => this.manejarCambioFicha());
-      console.log('✅ Evento de selección de ficha configurado');
+      console.log('Select event OK');
     }
     
-    // Configurar eventos de búsqueda si existen los elementos
+    // Eventos de búsqueda
     if (this.elementos.searchInput) {
       const searchBtn = document.getElementById('search-btn');
       const clearBtn = document.getElementById('clear-search-btn');
       
       if (searchBtn) {
         searchBtn.addEventListener('click', () => this.manejarBusqueda());
-        console.log('✅ Evento de búsqueda configurado');
+        console.log('Search event OK');
       }
       
       if (clearBtn) {
         clearBtn.addEventListener('click', () => this.limpiarBusqueda());
-        console.log('✅ Evento de limpiar búsqueda configurado');
+        console.log('Clear event OK');
       }
       
-      // Buscar mientras se escribe (con debounce)
+      // Búsqueda mientras escribe
       this.elementos.searchInput.addEventListener('input', 
         this.debounce((e) => this.manejarBusquedaTiempoReal(e), 500)
       );
       
-      // Buscar al presionar Enter
+      // Enter para buscar
       this.elementos.searchInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
           this.manejarBusqueda();
@@ -124,7 +123,7 @@ class SenaApp {
     }
   }
 
-  // Función debounce para evitar búsquedas excesivas
+  // Para evitar spam en búsqueda
   debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -137,13 +136,13 @@ class SenaApp {
     };
   }
 
-  // Verifica si hay una sesión activa al cargar la página
+  // Al cargar, revisar si ya hay sesión activa
   async verificarSesionInicial() {
     const usuarioActual = getUser();
     if (usuarioActual) {
       await this.mostrarAplicacion(usuarioActual);
       
-      // Restaurar ficha seleccionada si existe
+      // Restaurar ficha si la había seleccionado
       const fichaSeleccionada = getSelectedFicha();
       if (fichaSeleccionada && this.aprendices.length > 0) {
         this.elementos.fichaSelect.value = fichaSeleccionada.fichaId;
@@ -152,30 +151,30 @@ class SenaApp {
     }
   }
 
-  // Maneja el proceso de login
+  // Procesar login del usuario
   async manejarLogin(evento) {
-    console.log('🔄 Iniciando proceso de login...');
+    console.log('Procesando login...');
     evento.preventDefault();
     
     const username = this.elementos.usernameInput.value.trim();
     const password = this.elementos.passwordInput.value.trim();
     
-    console.log('📝 Datos ingresados:', { username, password });
+    console.log('Usuario:', { username, password });
 
     if (this.validarCredenciales(username, password)) {
-      console.log('✅ Credenciales válidas');
+      console.log('Credenciales OK');
       try {
         login(username);
-        console.log('💾 Usuario guardado en localStorage');
+        console.log('Usuario guardado');
         await this.mostrarAplicacion(username);
         this.limpiarFormulario();
-        alert(`¡Bienvenido, ${username}!`); // Cambio temporal para debug
+        alert(`Bienvenido, ${username}!`);
       } catch (error) {
-        console.error('❌ Error durante el login:', error);
+        console.error('Error login:', error);
         alert('Error al iniciar sesión');
       }
     } else {
-      console.log('❌ Credenciales incorrectas');
+      console.log('Credenciales incorrectas');
       alert("Credenciales incorrectas. La contraseña debe ser: adso3064975");
     }
   }
@@ -314,8 +313,7 @@ class SenaApp {
 }
 
 /**
- * Inicialización de la aplicación
- * Se ejecuta cuando el DOM está completamente cargado
+ * Inicializar cuando la página esté lista
  */
 document.addEventListener("DOMContentLoaded", () => {
   new SenaApp();

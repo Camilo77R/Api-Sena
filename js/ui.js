@@ -1,7 +1,11 @@
 /**
- * MÓDULO DE INTERFAZ DE USUARIO
- * Se encarga de toda la manipulación del DOM y renderizado de componentes
- * Principio de responsabilidad única: solo maneja la presentación de datos
+ * Funciones para manejar la interfaz y mostrar los datos
+ * Todo lo visual va aquí para mantenerlo separado de la lógica
+ */
+
+/**
+ * Muestra todas las fichas disponibles en el dropdown
+ * Con contador de aprendices por ficha
  */
 
 import { saveFicha, setSelectedFicha, saveSearchHistory } from "./storage.js";
@@ -130,9 +134,8 @@ function obtenerFichasUnicas(aprendices) {
 // ===== FUNCIONES DE RENDERIZADO DE TABLA =====
 
 /**
- * Renderiza la tabla de aprendices para una ficha específica
- * @param {Array} aprendices - Array completo de aprendices
- * @param {string} fichaId - ID de la ficha seleccionada
+ * Muestra los aprendices en la tabla
+ * Con colores según el estado del aprendiz
  */
 export function renderTable(aprendices, fichaId) {
   if (!tableBody) {

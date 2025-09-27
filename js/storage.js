@@ -1,15 +1,10 @@
 /**
- * MÓDULO DE ALMACENAMIENTO
- * Se encarga de toda la lógica relacionada con localStorage y sessionStorage
- * Principio de responsabilidad única: solo maneja persistencia de datos
+ * Funciones para manejar localStorage y sessionStorage
+ * Separé esto para mantener organizado
  */
 
-// ===== FUNCIONES DE AUTENTICACIÓN =====
+// Funciones para login/logout
 
-/**
- * Guarda el usuario en localStorage para mantener sesión persistente
- * @param {string} username - Nombre de usuario
- */
 export function login(username) {
   if (!username || username.trim() === '') {
     throw new Error('El nombre de usuario no puede estar vacío');
@@ -23,37 +18,30 @@ export function login(username) {
   localStorage.setItem("user", JSON.stringify(userData));
 }
 
-/**
- * Elimina todos los datos del usuario y cierra sesión
- */
 export function logout() {
-  // Limpiamos localStorage
+  // Limpiar localStorage
   localStorage.removeItem("user");
   localStorage.removeItem("ficha");
   
-  // También limpiamos sessionStorage
+  // Limpiar sessionStorage también
   sessionStorage.removeItem("selectedFicha");
   sessionStorage.removeItem("searchHistory");
 }
 
-/**
- * Obtiene la información del usuario logueado
- * @returns {Object|null} Datos del usuario o null si no está logueado
- */
 export function getUser() {
   try {
     const userData = localStorage.getItem("user");
     if (!userData) return null;
     
     const parsed = JSON.parse(userData);
-    // Si es string viejo, convertirlo al nuevo formato
+    // Compatible con versiones anteriores
     if (typeof parsed === 'string') {
       return { username: parsed, loginTime: null };
     }
     
     return parsed;
   } catch (error) {
-    console.error('Error al obtener datos del usuario:', error);
+    console.error('Error obteniendo usuario:', error);
     return null;
   }
 }

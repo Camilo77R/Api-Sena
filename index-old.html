@@ -2,35 +2,31 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Taller LocalStorage & Fetch - GitHub Pages</title>
+  <title>Taller LocalStorage & Fetch</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Estilos de respaldo por si falla Tailwind */
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-    .form-group { margin-bottom: 1rem; }
-    .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
-    .btn-primary { background: #16a34a; color: white; }
-    .table { width: 100%; border-collapse: collapse; }
-    .table th, .table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-  </style>
+  <script>
+    // Configurar Tailwind para producción
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      console.log('🌐 Aplicación ejecutándose en producción');
+    }
+  </script>
 </head>
 <body class="bg-white text-green-900 min-h-screen flex flex-col">
 
-  <!-- LOGIN -->
+
   <div id="login-section" class="flex-grow flex items-center justify-center">
     <div class="w-full max-w-sm bg-green-50 shadow-lg rounded-xl p-6">
       <h1 class="text-2xl font-bold text-center mb-6">Iniciar Sesión</h1>
       <form id="login-form" class="space-y-4">
-        <div class="form-group">
+        <div>
           <label class="block text-sm font-medium">Usuario</label>
           <input type="text" id="username" class="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-green-600" required>
         </div>
-        <div class="form-group">
+        <div>
           <label class="block text-sm font-medium">Contraseña</label>
           <input type="password" id="password" class="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-green-600" required>
         </div>
-        <button type="submit" class="btn btn-primary w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">Entrar</button>
+        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">Entrar</button>
       </form>
     </div>
   </div>
@@ -51,7 +47,7 @@
         <select id="ficha-select" class="border rounded-lg p-2 w-full max-w-xs focus:ring-2 focus:ring-green-600"></select>
       </div>
       <div class="overflow-x-auto">
-        <table class="table min-w-full border border-green-200 rounded-lg">
+        <table class="min-w-full border border-green-200 rounded-lg">
           <thead class="bg-green-100">
             <tr>
               <th class="px-4 py-2 border">Documento</th>
@@ -71,21 +67,7 @@
     </footer>
   </div>
 
-  <!-- SCRIPTS INLINE PARA GITHUB PAGES -->
-  <script type="module">
-    // Código completo en línea aquí...
-    console.log('🚀 Aplicación iniciada en GitHub Pages');
-    
-    // Si necesitas, puedo generar todo el código en línea
-    // O usar rutas absolutas con tu nombre de usuario de GitHub
-    
-    // Por ahora, carga los módulos:
-    import('./js/app.js').then(module => {
-      console.log('✅ Módulos cargados correctamente');
-    }).catch(error => {
-      console.error('❌ Error cargando módulos:', error);
-      // Fallback: cargar versión inline
-    });
-  </script>
+  <!-- SCRIPTS -->
+  <script type="module" src="./js/app.js"></script>
 </body>
 </html>

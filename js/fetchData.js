@@ -1,24 +1,23 @@
 /**
- * MÓDULO DE OBTENCIÓN DE DATOS
- * Se encarga de todas las operaciones relacionadas con APIs externas
- * Principio de responsabilidad única: solo maneja fetching de datos
+ * Funciones para obtener datos de la API
+ * Separé esto para mantener organizado el fetch
  */
 
 /**
- * Obtiene la lista de aprendices desde la API del SENA
- * Versión simplificada para debugging
+ * Obtiene los aprendices de la API del SENA
+ * Le puse todos los console.log porque hubo problemas con los nombres de los campos
  */
 export async function fetchAprendices() {
   const url = "https://raw.githubusercontent.com/CesarMCuellarCha/apis/refs/heads/main/SENA-CTPI.matriculados.json";
   
-  console.log('🌐 Intentando conectar a:', url);
+  console.log('Conectando a API...', url);
   
   try {
-    console.log('📡 Haciendo petición fetch...');
+    console.log('Haciendo fetch...');
     
     const response = await fetch(url);
     
-    console.log('📋 Respuesta recibida:', {
+    console.log('Respuesta:', {
       status: response.status,
       statusText: response.statusText,
       ok: response.ok
@@ -28,18 +27,18 @@ export async function fetchAprendices() {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
     
-    console.log('📦 Parseando JSON...');
+    console.log('Parseando datos...');
     const data = await response.json();
     
-    console.log('✅ Datos parseados exitosamente');
-    console.log('📊 Tipo de datos:', typeof data);
-    console.log('📏 Es array:', Array.isArray(data));
-    console.log('🔢 Cantidad de elementos:', data.length);
-    console.log('🔍 Primer elemento (campos reales):', data[0]);
+    console.log('Datos OK');
+    console.log('Tipo:', typeof data);
+    console.log('Es array:', Array.isArray(data));
+    console.log('Elementos:', data.length);
+    console.log('Primer elemento:', data[0]);
     
     // Normalizo los datos que llegan para que funcionen con este código
     const datosNormalizados = data.map(aprendiz => ({
-      // Usar los nombres de campos reales de la API
+      // Convertir campos de la API a nuestros nombres
       documento: aprendiz.DOCUMENTO,
       nombre: aprendiz.NOMBRE,
       codigo_ficha: aprendiz.FICHA,
@@ -50,32 +49,30 @@ export async function fetchAprendices() {
       jornada_formacion: aprendiz.JORNADA_FORMACION,
       fecha_inicio_lectiva: aprendiz.FECHA_INICIO_LECTIVA,
       fecha_fin_lectiva: aprendiz.FECHA_FIN_LECTIVA,
-      // Mantener también los originales por si acaso
+      // Mantener originales por si acaso
       ...aprendiz
     }));
     
-    console.log('🔄 Datos normalizados:', datosNormalizados.length, 'elementos');
-    console.log('📝 Primer dato normalizado:', datosNormalizados[0]);
+    console.log('Datos normalizados:', datosNormalizados.length);
+    console.log('Primer normalizado:', datosNormalizados[0]);
     
     return datosNormalizados;
     
   } catch (error) {
-    console.error('💥 ERROR COMPLETO:', {
+    console.error('ERROR:', {
       message: error.message,
       name: error.name,
       stack: error.stack
     });
     
-    console.error('🔄 Devolviendo array vacío');
+    console.error('Devolviendo array vacío');
     return [];
   }
 }
 
 /**
- * Obtiene estadísticas específicas de una ficha
- * @param {Array} aprendices - Array de todos los aprendices
- * @param {string} fichaId - ID de la ficha
- * @returns {Object} Estadísticas de la ficha
+ * Obtiene estadísticas de una ficha específica
+ * Cuenta los aprendices y agrupa por estado
  */
 export function getEstadisticasFicha(aprendices, fichaId) {
   if (!Array.isArray(aprendices) || !fichaId) {
@@ -103,7 +100,7 @@ export function getEstadisticasFicha(aprendices, fichaId) {
     estadisticas.porEstado[estado] = (estadisticas.porEstado[estado] || 0) + 1;
   });
   
-  // Información de la ficha (tomamos del primer aprendiz)
+  // Info de la ficha usando el primer aprendiz
   const primerAprendiz = aprendicesFicha[0];
   estadisticas.fichaInfo = {
     codigo: primerAprendiz.codigo_ficha || primerAprendiz.FICHA,
@@ -119,10 +116,8 @@ export function getEstadisticasFicha(aprendices, fichaId) {
 }
 
 /**
- * Busca aprendices por término de búsqueda
- * @param {Array} aprendices - Array de todos los aprendices
- * @param {string} termino - Término de búsqueda
- * @returns {Array} Aprendices que coinciden con la búsqueda
+ * Busca aprendices por nombre, documento, estado, etc
+ * Funciona con los nombres de campos normalizados
  */
 export function buscarAprendices(aprendices, termino) {
   if (!Array.isArray(aprendices) || !termino || termino.trim() === '') {
@@ -148,9 +143,8 @@ export function buscarAprendices(aprendices, termino) {
 }
 
 /**
- * Obtiene todas las fichas únicas del array de aprendices
- * @param {Array} aprendices - Array de aprendices
- * @returns {Array} Array de fichas únicas con información adicional
+ * Saca todas las fichas únicas y cuenta cuántos aprendices tiene cada una
+ * Útil para llenar el dropdown de fichas
  */
 export function obtenerFichasUnicas(aprendices) {
   if (!Array.isArray(aprendices)) {
@@ -173,16 +167,15 @@ export function obtenerFichasUnicas(aprendices) {
     fichasMap.get(fichaId).totalAprendices++;
   });
   
-  // Convertir Map a Array y ordenar por código
+  // Pasar Map a Array y ordenar por código de ficha
   return Array.from(fichasMap.values()).sort((a, b) => 
     a.codigo.toString().localeCompare(b.codigo.toString())
   );
 }
 
 /**
- * Valida la estructura de datos de un aprendiz
- * @param {Object} aprendiz - Objeto aprendiz a validar
- * @returns {boolean} true si la estructura es válida
+ * Verifica que un aprendiz tenga los campos básicos necesarios
+ * Para evitar errores si faltan datos importantes
  */
 export function validarEstructuraAprendiz(aprendiz) {
   const camposRequeridos = [
