@@ -312,9 +312,5 @@ class SenaApp {
   }
 }
 
-/**
- * Inicializar cuando la página esté lista
- */
-document.addEventListener("DOMContentLoaded", () => {
-  new SenaApp();
-});
+// Exportar la clase para que pueda ser importada
+export { SenaApp };
