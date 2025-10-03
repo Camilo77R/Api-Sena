@@ -194,8 +194,12 @@ function crearFilaAprendiz(aprendiz) {
   const tr = document.createElement("tr");
   tr.className = "border hover:bg-green-50 transition-colors";
   
+  // Debug: ver qué datos llegan realmente
+  console.log('🔍 Datos del aprendiz:', aprendiz);
+  console.log('📄 Campo documento:', aprendiz.documento, 'NUMERO_DOCUMENTO:', aprendiz.NUMERO_DOCUMENTO);
+  
   // Limpiar datos y manejar valores undefined/null - buscar en ambos formatos
-  const documento = aprendiz.documento || aprendiz.DOCUMENTO || 'Sin documento';
+  const documento = aprendiz.documento || aprendiz.NUMERO_DOCUMENTO || 'Sin documento';
   const nombre = aprendiz.nombre || aprendiz.NOMBRE || 'Sin nombre';
   const estado = aprendiz.estado_aprendiz || aprendiz.ESTADO_APRENDIZ || 'Sin estado';
   

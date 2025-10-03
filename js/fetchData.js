@@ -39,7 +39,7 @@ export async function fetchAprendices() {
     // Normalizo los datos que llegan para que funcionen con este código
     const datosNormalizados = data.map(aprendiz => ({
       // Convertir campos de la API a nuestros nombres
-      documento: aprendiz.DOCUMENTO,
+      documento: aprendiz.NUMERO_DOCUMENTO,
       nombre: aprendiz.NOMBRE,
       codigo_ficha: aprendiz.FICHA,
       programa: aprendiz.PROGRAMA,
@@ -131,7 +131,7 @@ export function buscarAprendices(aprendices, termino) {
       aprendiz.nombre?.toLowerCase().includes(terminoLower) ||
       aprendiz.NOMBRE?.toLowerCase().includes(terminoLower) ||
       aprendiz.documento?.toString().includes(terminoLower) ||
-      aprendiz.DOCUMENTO?.toString().includes(terminoLower) ||
+      aprendiz.NUMERO_DOCUMENTO?.toString().includes(terminoLower) ||
       aprendiz.estado_aprendiz?.toLowerCase().includes(terminoLower) ||
       aprendiz.ESTADO_APRENDIZ?.toLowerCase().includes(terminoLower) ||
       aprendiz.programa?.toLowerCase().includes(terminoLower) ||
